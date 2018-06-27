@@ -8,34 +8,19 @@
 
 include 'GetQuery.php';
 
-// this stores server and user names with password for connection to mysql
-$dbName = 'dvTraining';
-$query = "SELECT * FROM actors";
-
-$connectionData = array(
-    "serverName" => 'localhost',
-    "userName" => 'ahrrhy',
-    "userPassword" => 'ArO15999');
-
-$myQuery = new GetQuery();
-
-// create new connection to mysql
-$myQuery->mysqlConnection($connectionData);
-
-// select database
-$myQuery->dbSelect($dbName);
-
-// send query and get result
-$result = $myQuery->getQueryResult($query.';');
-
-// output data of each row
-while($row = $result->fetch_assoc()) {
-    echo "<br> id: ". $row["actor_id"]. " - Name: ". $row["first_name"]. " " . $row["last_name"] . "<br>";
-}
+$query = "SELECT CONCAT(a.first_name,' ', a.last_name) AS 'full name', SUM(p.gonorar) AS 'fees summary' 
+    FROM actors AS a JOIN payments AS p ON p.actor_id=a.actor_id 
+    WHERE TIMESTAMPDIFF(YEAR,a.dob,curdate()) BETWEEN :from_age AND :to_age GROUP BY a.actor_id;";
+$queryParams = [
+    ':from_age' => 40,
+    ':to_age'   => 60
+];
 
 
-// close connection after operation
-$myQuery->connectMysql->close();
+$queryBuilder = new dbConnection();
+$result = $queryBuilder->getQueryResult($query, $queryParams);
 
-// create new connection to database
+$current_file_name = basename($_SERVER['PHP_SELF']);
+echo $current_file_name."\n";
 
+var_dump($result);

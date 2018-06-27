@@ -6,27 +6,64 @@
  * Time: 3:53
  */
 
-class GetQuery
+
+class dbConnection
 {
-    public $connectMysql;
-    public $queryResult;
 
-    // this method will return new connection to mysql
-    public function mysqlConnection($dataArray) {
-        $this->connectMysql = new mysqli( $dataArray["serverName"], $dataArray["userName"], $dataArray["userPassword"] );
-        return $this->connectMysql;
+    /**
+     * @var array $connectionParams
+     */
+    private static $connectionParams = [
+        "serverName"   => 'mysql:host=localhost;',
+        "databaseName" => 'dbname=dvTraining',
+        "userName"     => 'ahrrhy',
+        "userPassword" => 'ArO15999'
+    ];
+
+    /**
+     * @var PDO $connection
+     */
+    private static $connection;
+
+    /**
+     * @return PDO
+     */
+    private function getConnection()
+    {
+        if (null === self::$connection) {
+            self::$connection = new PDO(
+                self::$connectionParams['serverName'] . self::$connectionParams['databaseName'],
+                self::$connectionParams['userName'],
+                self::$connectionParams['userPassword']
+            );
+        }
+        return self::$connection;
     }
 
-    // this method will connect to chosen database
-    public function dbSelect($dbName) {
-        $sql = "USE $dbName ;";
-        $this->connectMysql->query($sql);
+    /**
+     * @param $query
+     * @param array $params
+     * @return array
+     */
+    public function getQueryResult($query, array $params = [])
+    {
+        $statement = $this->getConnection()->prepare($query);
+
+        foreach ($params as $name => $value) {
+            $statement->bindValue(
+                $name,
+                $value
+            );
+        }
+
+        $statement->execute();
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // this will send query from front-end
-    public function getQueryResult($query) {
-        return $this->queryResult = $this->connectMysql->query($query);
+    // this will output received data
+    public function showData()
+    {
+
     }
 }
-
-
