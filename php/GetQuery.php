@@ -6,22 +6,27 @@
  * Time: 3:53
  */
 
-$serverName = 'localhost';
-$userName = 'ahrrhy';
-$userPassword = 'ArO15999';
-
 class GetQuery
 {
-    public $connection;
+    public $connectMysql;
+    public $queryResult;
 
-    public function dbConnection($serverName, $userName, $userPassword) {
-        $this->connection = new mysqli($serverName, $userName, $userPassword);
-        if ($this->connection->connect_error) {
-            die("Connection failed: " . $this->connection->connect_error);
-        }
-        return $this->connection;
+    // this method will return new connection to mysql
+    public function mysqlConnection($dataArray) {
+        $this->connectMysql = new mysqli( $dataArray["serverName"], $dataArray["userName"], $dataArray["userPassword"] );
+        return $this->connectMysql;
+    }
+
+    // this method will connect to chosen database
+    public function dbSelect($dbName) {
+        $sql = "USE $dbName ;";
+        $this->connectMysql->query($sql);
+    }
+
+    // this will send query from front-end
+    public function getQueryResult($query) {
+        return $this->queryResult = $this->connectMysql->query($query);
     }
 }
 
-$myQuery = new GetQuery();
-$myQuery->dbConnection($serverName, $userName, $userPassword);
+
