@@ -4,24 +4,71 @@
     <meta charset="UTF-8">
     <title>Films</title>
     <link rel="stylesheet" href="css/main.min.css">
-    <script src="js/build.min.js"></script>
+    <script src="js/build.js"></script>
 
 </head>
 <body>
     <section class="container">
         <h2 class="center">This is a training page. Here you can make some queries to database named dvTraining</h2>
-            <ul class="row">
-                <li class="col s12 m6 center">
-                    <button class="waves-effect waves-teal btn-flat" id="on-year">Count summary of fees for actors in age from 40 to 60 years old</button>
+            <ul class="collapsible">
+                <li>
+                    <p class="collapsible-header">Count summary of fees for actors in age from and to years old</p>
+                    <form id="feesByAge" class="collapsible-body" action="/">
+                        <p class="range-field">
+                            <span>From this age: </span><span class="fromAgeResult"></span>
+                            <input name="ageFrom" type="range" id="ageFrom" min="0" max="100">
+                        </p>
+                        <p class="range-field">
+                            <span>To this age: </span><span class="toAgeResult"></span>
+                            <input name="ageTo" type="range" id="ageTo" min="0" max="100">
+                        </p>
+                        <input name="feesByAge" class="waves-effect waves-teal btn-flat" id="on-year" type="submit" value="Count">
+                    </form>
+
                 </li>
-                <li class="col s12 m6 center">
-                    <button class="waves-effect waves-teal btn-flat" id="actor-info">Get info about actors who played roles in films of chosen studio</button>
+                <li>
+                    <p class="collapsible-header">Get info about actors who played roles in films of chosen studio</p>
+                    <form id="actorsByStudios" class="collapsible-body row" action="/">
+                        <div class="input-field col s12 m4">
+                            <select name="studioName">
+                                <option value="" disabled selected>Choose studio</option>
+                                <option value="1">Option 1</option>
+                                <option value="2">Option 2</option>
+                                <option value="3">Option 3</option>
+                            </select>
+                            <label>Choose studio</label>
+                        </div>
+                        <p class="col s12">
+                            <input name="actorsByStudios" class="waves-effect waves-teal btn-flat" id="actor-info" type="submit" value="Find">
+                        </p>
+                    </form>
+
                 </li>
-                <li class="col s12 m6 center">
-                    <button class="waves-effect waves-teal btn-flat" id="actor-namesake">Get actors who has no namesake</button>
+                <li>
+                    <p class="collapsible-header">Get actors who has no namesake</p>
+                    <form id="namesakes" class="collapsible-body" action="/">
+                        <input name="namesakes" class="waves-effect waves-teal btn-flat" id="actor-namesake" type="submit" value="Find">
+                    </form>
                 </li>
-                <li class="col s12 m6 center">
-                    <button class="waves-effect waves-teal btn-flat" id="last-years">Count summary of fees for actors who played roles in films chosen studios for last 10 years</button>
+                <li>
+                    <p class="collapsible-header">Count summary of fees for actors who played roles in films chosen studios for last years</p>
+                    <form id="actorsByLastYears" class="collapsible-body row" action="/">
+                        <div class="input-field col s12 m4">
+                            <select name="studioName">
+                                <option value="" disabled selected>Choose studio</option>
+                                <option value="1">Option 1</option>
+                                <option value="2">Option 2</option>
+                                <option value="3">Option 3</option>
+                            </select>
+                            <label>Choose studio</label>
+                        </div>
+                        <p class="col s12 range-field">
+                            <input type="range" name="lastAges" id="lastAges" min="0" max="130">
+                        </p>
+                        <p class="col s12">
+                            <input name="actorsByLastYears" class="waves-effect waves-teal btn-flat" id="last-years" type="submit" value="Find">
+                        </p>
+                    </form>
                 </li>
             </ul>
     </section>

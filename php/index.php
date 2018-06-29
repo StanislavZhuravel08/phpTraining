@@ -6,21 +6,22 @@
  * Time: 9:00
  */
 
-include 'GetQuery.php';
+include 'dbConnection.php';
 
-$query = "SELECT CONCAT(a.first_name,' ', a.last_name) AS 'full name', SUM(p.gonorar) AS 'fees summary' 
-    FROM actors AS a JOIN payments AS p ON p.actor_id=a.actor_id 
-    WHERE TIMESTAMPDIFF(YEAR,a.dob,curdate()) BETWEEN :from_age AND :to_age GROUP BY a.actor_id;";
+// this data will come from front-end
+
+$data = 'ageFrom=50&ageTo=50&formId=feesByAge';
+
+
+
 $queryParams = [
     ':from_age' => 40,
     ':to_age'   => 60
 ];
-
+// this data will come from front-end
 
 $queryBuilder = new dbConnection();
-$result = $queryBuilder->getQueryResult($query, $queryParams);
 
-$current_file_name = basename($_SERVER['PHP_SELF']);
-echo $current_file_name."\n";
+$queryBuilder->getParams($data);
 
-var_dump($result);
+//$queryBuilder->showResultData($query, $queryParams);
