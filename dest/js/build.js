@@ -20389,125 +20389,116 @@ if (Vel) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _config = require('./config');
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DataSender = function () {
-  function DataSender() {
-    _classCallCheck(this, DataSender);
-  }
+    function DataSender() {
+        _classCallCheck(this, DataSender);
+    }
 
-  _createClass(DataSender, [{
-    key: 'checkData',
+    _createClass(DataSender, [{
+        key: 'sendData',
 
 
-    /**
-     * @param e
-     * @returns {*}
-     */
-    value: function checkData(form) {
-      // check if data can hold invalid values
-
-      if (form[0].id === 'feesByAge') {
-
-        // the values are need to check
-        var fromAge = form.find('#ageFrom'),
-            toAge = form.find('#ageTo'),
-            fromAgeVal = form.find('#ageFrom').val(),
-            toAgeVal = form.find('#ageTo').val();
-
-        // validation
-        if (fromAgeVal > toAgeVal) {
-          var a = toAgeVal,
-              b = fromAgeVal;
-
-          // setting right values
-          fromAge.val(a);
-          toAge.val(b);
-
-          return form;
+        /**
+         * @param $form
+         */
+        value: function sendData($form) {
+            return $.ajax({
+                type: $form.attr('method') ? $form.attr('method') : 'post',
+                url: $form.attr('action'),
+                data: $form.serialize() + '&id=' + $form.attr('id')
+            });
         }
 
-        return form;
-      }
+        // checkData($form) {
+        //     // check if data can hold invalid values
+        //
+        //     if ($form.id() === 'feesByAge') {
+        //
+        //         // the values are need to check
+        //         let fromAge = form.find('#ageFrom'),
+        //             toAge = form.find('#ageTo'),
+        //             fromAgeVal = form.find('#ageFrom').val(),
+        //             toAgeVal = form.find('#ageTo').val();
+        //
+        //         // validation
+        //         if (fromAgeVal > toAgeVal) {
+        //             let a = toAgeVal,
+        //                 b = fromAgeVal;
+        //
+        //             // setting right values
+        //             fromAge.val(a);
+        //             toAge.val(b);
+        //
+        //             return form;
+        //         }
+        //
+        //         return form;
+        //     }
+        //
+        //     return form;
+        // }
 
-      return form;
-    }
+    }]);
 
-    /**
-     * @param form
-     * @param url
-     * @param method
-     * @param callback
-     */
-
-  }, {
-    key: 'sendData',
-    value: function sendData(form, url, method, callback) {
-      //send data from form to server
-
-      form.preventDefault();
-
-      var serializedString = form.serialize();
-      serializedString += '&formId=' + form[0].id;
-
-      $.ajax({
-        type: method,
-        url: url,
-        data: serializedString,
-        success: callback(result)
-      });
-    }
-  }, {
-    key: 'showResult',
-    value: function showResult(result) {
-      console.log(result);
-    }
-  }]);
-
-  return DataSender;
+    return DataSender;
 }();
 
 exports.default = DataSender;
 
-},{}],2:[function(require,module,exports){
+},{"./config":2}],2:[function(require,module,exports){
 'use strict';
 
-var _DataSender = require('./DataSender.js');
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+// stores servers url's
+var urls = ['../../php/index.php'];
+var methods = ['POST', 'GET'];
+
+exports.urls = urls;
+exports.methods = methods;
+
+},{}],3:[function(require,module,exports){
+"use strict";
+
+var _DataSender = require("./DataSender.js");
 
 var _DataSender2 = _interopRequireDefault(_DataSender);
 
+var _config = require("./config.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-;(function () {
+(function () {
     $(document).ready(function () {
 
         // create new instance of data sender
-        var send = new _DataSender2.default();
+        var dataSender = new _DataSender2.default();
 
         // find all forms in document
-        var forms = $('form');
+        var form = $('#feesByAge');
+        form.submit(function (event) {
+            event.preventDefault();
 
-        forms.each(function (i, el) {
+            var $form = $(event.currentTarget);
 
-            var $form = $(el);
+            var request = dataSender.sendData($form);
 
-            $form.submit(function (e) {
-
-                e.preventDefault();
-
-                var $form = $(e.target);
-
-                $form = send.checkData($form);
-
-                console.log($form);
-
-                console.log($form.serialize() + '&formId=' + $form[0].id);
-                //send.sendData(e, );
+            request.done(function (data) {
+                console.log(data);
+                console.log(JSON.parse(data));
+            });
+            request.fail(function (jqXHR, textStatus) {
+                console.log('Something went wrong' + textStatus);
             });
         });
     });
@@ -20517,4 +20508,4 @@ $(document).ready(function () {
     $('select').material_select();
 });
 
-},{"./DataSender.js":1}]},{},[2]);
+},{"./DataSender.js":1,"./config.js":2}]},{},[3]);

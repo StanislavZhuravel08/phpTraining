@@ -68,23 +68,7 @@ class dbConnection
         return self::$connection;
     }
 
-    private function getQueryName($requestData)
-    {
 
-        $findStr = 'formId=';
-        $strPos = strpos($requestData, $findStr) + strlen($findStr);
-
-        return $queryName = substr($requestData, $strPos);
-    }
-
-    public function getParams($requestData)
-    {
-        $findStr = '&formId=';
-        $strPos = strpos($requestData, $findStr);
-        $paramStr = substr($requestData,0, $strPos);
-        $param = explode('&', $paramStr);
-        print_r($param);
-    }
 
     /**
      * @param $queryName
@@ -98,11 +82,12 @@ class dbConnection
 
     /**
      * @param $queryName
-     * @param array $params
+     * @param $params
      * @return array
      */
-    public function getQueryResult($queryName, array $params = [])
+    public function getQueryResult($queryName, $params)
     {
+
         // get needed query
         $query = self::selectQuery($queryName);
 
@@ -114,6 +99,7 @@ class dbConnection
         foreach ($params as $name => $value) {
 
             // setting custom params to statement
+            $name = ':' . $name;
 
             $statement->bindValue(
                 $name,
@@ -128,22 +114,7 @@ class dbConnection
 
         // returns an array containing all of the result set rows
         // PDO::FETCH_ASSOC returns result as associative array
-
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * @param $queryName
-     * @param $params
-     */
-    public function showResultData($queryName, $params)
-    {
-        $data = $this->getQueryResult($queryName, $params);
-
-        foreach ($data as $hasRow => $row) {
-            foreach ($row as $field => $value) {
-                echo "$field: $value \n";
-            }
-        }
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return json_encode($data);
     }
 }
