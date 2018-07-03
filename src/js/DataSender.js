@@ -9,7 +9,8 @@ export default class DataSender {
         return $.ajax({
             type: $form.attr('method') ? $form.attr('method') : 'post',
             url: $form.attr('action'),
-            data: $form.serialize() + '&id=' +$form.attr('id')
+            dataType: 'json',
+            data: $form.serialize()
         });
     }
 

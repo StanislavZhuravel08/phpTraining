@@ -1,11 +1,17 @@
 import DataSender from "./DataSender.js";
+import Validator from "./Validator.js";
 import {urls, methods} from "./config.js";
 
 (function () {
     $(document).ready( () => {
 
+        //create instance of validator
+        let validator = new Validator();
+
+        // validator.getFields('#feesByAge');
+
         // create new instance of data sender
-       let dataSender = new DataSender();
+        let dataSender = new DataSender();
 
         // find all forms in document
         let form = $('#feesByAge');
@@ -18,7 +24,6 @@ import {urls, methods} from "./config.js";
 
             request.done( (data) => {
                 console.log(data);
-                console.log(JSON.parse(data));
             });
             request.fail( (jqXHR, textStatus) => {
                 console.log('Something went wrong' + textStatus);

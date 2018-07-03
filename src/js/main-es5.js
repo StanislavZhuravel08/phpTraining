@@ -27,7 +27,8 @@ var DataSender = function () {
             return $.ajax({
                 type: $form.attr('method') ? $form.attr('method') : 'post',
                 url: $form.attr('action'),
-                data: $form.serialize() + '&id=' + $form.attr('id')
+                dataType: 'json',
+                data: $form.serialize()
             });
         }
 
@@ -67,7 +68,81 @@ var DataSender = function () {
 
 exports.default = DataSender;
 
-},{"./config":2}],2:[function(require,module,exports){
+},{"./config":3}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Validator = function () {
+    function Validator() {
+        _classCallCheck(this, Validator);
+
+        this.rules = {
+            'validate-int': this.validateInt,
+            'validate-range': this.validateRange,
+            'validate-required': this.validateRequired
+        };
+    }
+
+    _createClass(Validator, [{
+        key: 'getFields',
+        value: function getFields($form) {
+            var fieldData = {},
+                rules = [],
+                params = [];
+
+            var fields = $form.querySelectorAll('[data-validator-rule]');
+            console.log(fields);
+        }
+
+        /**
+         * @param $form
+         */
+
+    }, {
+        key: 'validate',
+        value: function validate($form) {}
+
+        /**
+         * @param value
+         * @returns {boolean}
+         */
+
+    }, {
+        key: 'validateInt',
+        value: function validateInt(value) {
+            return Number.isInteger(value);
+        }
+
+        /**
+         * @param value
+         */
+
+    }, {
+        key: 'validateRange',
+        value: function validateRange(value) {}
+
+        /**
+         * @param value
+         */
+
+    }, {
+        key: 'validateRequired',
+        value: function validateRequired(value) {}
+    }]);
+
+    return Validator;
+}();
+
+exports.default = Validator;
+
+},{}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -80,12 +155,16 @@ var methods = ['POST', 'GET'];
 exports.urls = urls;
 exports.methods = methods;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 
 var _DataSender = require("./DataSender.js");
 
 var _DataSender2 = _interopRequireDefault(_DataSender);
+
+var _Validator = require("./Validator.js");
+
+var _Validator2 = _interopRequireDefault(_Validator);
 
 var _config = require("./config.js");
 
@@ -93,6 +172,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 (function () {
     $(document).ready(function () {
+
+        //create instance of validator
+        var validator = new _Validator2.default();
+
+        // validator.getFields('#feesByAge');
 
         // create new instance of data sender
         var dataSender = new _DataSender2.default();
@@ -108,7 +192,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
             request.done(function (data) {
                 console.log(data);
-                console.log(JSON.parse(data));
             });
             request.fail(function (jqXHR, textStatus) {
                 console.log('Something went wrong' + textStatus);
@@ -121,4 +204,4 @@ $(document).ready(function () {
     $('select').material_select();
 });
 
-},{"./DataSender.js":1,"./config.js":2}]},{},[3]);
+},{"./DataSender.js":1,"./Validator.js":2,"./config.js":3}]},{},[4]);

@@ -1,12 +1,24 @@
 export default class Validator {
     constructor() {
-        this.validators = {
+        this.rules = {
             'validate-int': this.validateInt,
             'validate-range': this.validateRange,
             'validate-required': this.validateRequired
         };
     }
 
+    getFields($form) {
+        let fieldData = {},
+            rules =[],
+            params =[];
+
+        let fields = $form.querySelectorAll('[data-validator-rule]');
+        console.log(fields);
+    }
+
+    /**
+     * @param $form
+     */
     validate($form) {
 
     }
@@ -19,7 +31,18 @@ export default class Validator {
         return Number.isInteger(value);
     }
 
-    validateRange($form) {
-        let min = $form.find('input').data();
+    /**
+     * @param value
+     */
+    validateRange(value) {
+
     }
+
+    /**
+     * @param value
+     */
+    validateRequired(value) {
+
+    }
+
 }

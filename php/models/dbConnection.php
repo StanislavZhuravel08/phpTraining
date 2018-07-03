@@ -6,11 +6,11 @@
  * Time: 3:53
  */
 
-
 class dbConnection
 {
 
     /**
+     * Associative array of Database parameters
      * @var array $connectionParams
      */
     private static $connectionParams = [
@@ -21,13 +21,12 @@ class dbConnection
     ];
 
     /**
+     * Associative array of queries to Database
      * @var array  $queriesList
      */
 
-    // stores queries list
-
     private static $queriesList = [
-        "feesByAge"         => "SELECT CONCAT(a.first_name,' ', a.last_name) AS 'full name', SUM(p.gonorar) AS 'fees summary' 
+        "feesByAge"         => "SELECT CONCAT(a.first_name,' ', a.last_name) AS 'full_name', SUM(p.gonorar) AS 'fees_summary' 
                                 FROM actors AS a JOIN payments AS p ON p.actor_id=a.actor_id 
                                 WHERE TIMESTAMPDIFF(YEAR,a.dob,curdate()) BETWEEN :from_age AND :to_age GROUP BY a.actor_id;",
         "actorsByStudios"   => "SELECT s.name AS 'studios name', CONCAT(a.first_name,' ', a.last_name) AS 'full name',
@@ -53,6 +52,7 @@ class dbConnection
     private static $connection;
 
     /**
+     * Connect to Database
      * @return PDO
      */
     private function getConnection()
@@ -71,6 +71,8 @@ class dbConnection
 
 
     /**
+     * Select query by its name as $key in self::$queriesList
+     *
      * @param $queryName
      * @return mixed
      */
@@ -81,13 +83,15 @@ class dbConnection
     }
 
     /**
+     * Make PDO statement and send it to Database
+     * Returns Database request in JSON string
+     *
      * @param $queryName
      * @param $params
-     * @return array
+     * @return string
      */
     public function getQueryResult($queryName, $params)
     {
-
         // get needed query
         $query = self::selectQuery($queryName);
 
