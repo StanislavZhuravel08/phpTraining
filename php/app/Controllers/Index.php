@@ -4,6 +4,7 @@ namespace Stas\Controllers;
 
 use Stas\Http\Response\AbstractResponse;
 use Stas\Http\Response\Html;
+use Stas\Models\dbConnection;
 
 class Index extends \Stas\Http\AbstractController
 {
@@ -21,13 +22,32 @@ class Index extends \Stas\Http\AbstractController
     }
 
     /**
-     * Renders needed page
+     * Returns associative array with studios data
      *
+     * @return array
+     */
+    private function getRawStudios(): array
+    {
+        $queryName = $this->thisShortName($this);
+        $queryName =lcfirst($queryName);
+        $dbConnection = new dbConnection();
+        $msg = $dbConnection->getQueryResult($queryName, '');
+        return $msg;
+    }
+
+    private function getStudios()
+    {
+
+    }
+
+    /**
      * @return string
      */
-    private function renderPage()
+    private function renderPage(): string
     {
         ob_start();
+        $studios = $this->getStudios();
+
         include($this->page);
 
         return ob_get_clean();

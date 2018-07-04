@@ -32,7 +32,7 @@ class dbConnection
                                 FROM studios AS s JOIN films AS f ON f.studio_id=s.studio_id AND s.studio_id=1 
                                 JOIN payments AS p ON p.film_id=f.film_id 
                                 JOIN actors AS a ON a.actor_id=p.actor_id GROUP BY a.actor_id;",
-        "namesakes"   => "SELECT CONCAT(a.first_name, ' ', b.last_name) AS 'full name' 
+        "namesakes"         => "SELECT CONCAT(a.first_name, ' ', b.last_name) AS 'full name' 
                                 FROM actors AS a INNER JOIN actors AS b ON a.actor_id=b.actor_id 
                                 GROUP BY b.last_name HAVING COUNT(a.last_name)=1;",
         "actorsByLastYears" => "SELECT s.name AS 'Studios name', COUNT(DISTINCT f.film_id) AS 'Films quantity', 
@@ -41,7 +41,8 @@ class dbConnection
                                 FROM studios AS s JOIN films AS f ON f.studio_id=s.studio_id AND f.year >= DATE(NOW())+ INTERVAL -10 YEAR 
                                 JOIN payments AS p ON p.film_id=f.film_id 
                                 JOIN actors AS a ON a.actor_id=p.actor_id AND a.actor_id=1 
-                                GROUP BY s.name ORDER BY AVG(p.gonorar) DESC;"
+                                GROUP BY s.name ORDER BY AVG(p.gonorar) DESC;",
+        "index"             => "SELECT studio_id AS 'studio_id', name AS 'Name' FROM studios;"
     ];
 
     /**
@@ -98,15 +99,16 @@ class dbConnection
 
         $statement = $this->getConnection()->prepare($query);
 
-        foreach ($params as $name => $value) {
+        if ($params !== '') {
+            foreach ($params as $name => $value) {
+                // setting custom params to statement
+                $name = ':' . $name;
 
-            // setting custom params to statement
-            $name = ':' . $name;
-
-            $statement->bindValue(
-                $name,
-                $value
-            );
+                $statement->bindValue(
+                    $name,
+                    $value
+                );
+            }
         }
 
         // executing a prepared statement

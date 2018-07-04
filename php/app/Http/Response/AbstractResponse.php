@@ -10,6 +10,8 @@ class AbstractResponse
     private $body;
 
     /**
+     * This class send Response
+     *
      * @return void
      */
     public function sendResponse()

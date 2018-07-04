@@ -10,7 +10,7 @@ class Json extends AbstractResponse
     private $body;
 
     /**
-     * @return void
+     * @inheritdoc
      */
     public function sendResponse()
     {

@@ -1,11 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: stanislavz
- * Date: 04.07.18
- * Time: 9:49
- */
 
+function showStudios($studios) {
+    foreach ($studios as $id => $name) {
+        echo "<option value='$id'>$name</option>";
+    }
+}
 ?>
 
 <section class="container">
@@ -29,8 +28,11 @@
             <p class="collapsible-header">Get info about actors who played roles in films of chosen studio</p>
             <form id="actorsByStudios" class="collapsible-body row" action="/actorsByStudios" method="get">
                 <div class="input-field col s12 m4">
-                    <select name="studioName" data-validator-rule="validate-int">
+                    <select name="studioName" class="studio-name" data-validator-rule="validate-int">
                         <option value="" disabled selected>Choose studio</option>
+                        <?php
+                        showStudios($studios);
+                        ?>
                     </select>
                     <label>Choose studio</label>
                 </div>
@@ -50,8 +52,11 @@
             <p class="collapsible-header">Count summary of fees for actors who played roles in films chosen studios for last years</p>
             <form id="actorsByLastYears" class="collapsible-body row" action="/actorsByLastYears">
                 <div class="input-field col s12 m4">
-                    <select name="studioName" data-validator-rule="validate-int">
+                    <select name="studioName" class="studio-name" data-validator-rule="validate-int">
                         <option value="" disabled selected>Choose studio</option>
+                        <?php
+                        showStudios($studios);
+                        ?>
                     </select>
                     <label>Choose studio</label>
                 </div>
