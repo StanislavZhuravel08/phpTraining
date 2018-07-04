@@ -1,10 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ahrrhy
- * Date: 27.06.18
- * Time: 3:53
- */
+
+namespace Stas\Models;
+
+use PDO;
 
 class dbConnection
 {
@@ -88,7 +86,7 @@ class dbConnection
      *
      * @param $queryName
      * @param $params
-     * @return string
+     * @return array
      */
     public function getQueryResult($queryName, $params)
     {
@@ -119,6 +117,6 @@ class dbConnection
         // returns an array containing all of the result set rows
         // PDO::FETCH_ASSOC returns result as associative array
         $data = $statement->fetchAll(PDO::FETCH_ASSOC);
-        return json_encode($data);
+        return $data;
     }
 }

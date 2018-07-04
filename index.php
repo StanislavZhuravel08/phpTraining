@@ -6,21 +6,10 @@
  * Time: 9:00
  */
 
-include 'php/models/dbConnection.php';
-include 'php/models/Request.php';
-include 'php/controllers/Router.php';
-include 'php/controllers/Dispatcher.php';
+require_once 'php/boostrap.php';
 
+use Stas\Http\Router;
 
 $router = new Router();
-$request = new Request($_SERVER);
-
-$request->getPath();
-
-$dispatcher = new Dispatcher($router);
-
-$dispatcher->led($request);
-$router->showRoutes();
-
-//$dbConnection = new dbConnection();
+$router->dispatch();
 
