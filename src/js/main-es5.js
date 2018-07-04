@@ -182,19 +182,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         var dataSender = new _DataSender2.default();
 
         // find all forms in document
-        var form = $('#feesByAge');
-        form.submit(function (event) {
-            event.preventDefault();
+        var forms = $('form');
+        $.each(forms, function (index, form) {
+            var $form = $(form);
+            $form.submit(function (event) {
+                event.preventDefault();
+                var $form = $(event.currentTarget);
+                var request = dataSender.sendData($form);
 
-            var $form = $(event.currentTarget);
-
-            var request = dataSender.sendData($form);
-
-            request.done(function (data) {
-                console.log(data);
-            });
-            request.fail(function (jqXHR, textStatus) {
-                console.log('Something went wrong' + textStatus);
+                request.done(function (data) {
+                    console.log(data);
+                });
+                request.fail(function (jqXHR, textStatus) {
+                    console.log('Something went wrong' + textStatus);
+                });
             });
         });
     });

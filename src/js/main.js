@@ -14,19 +14,20 @@ import {urls, methods} from "./config.js";
         let dataSender = new DataSender();
 
         // find all forms in document
-        let form = $('#feesByAge');
-        form.submit((event) => {
-            event.preventDefault();
+        let forms = $('form');
+        $.each( forms, (index, form) => {
+            let $form = $(form);
+            $form.submit( (event) => {
+                event.preventDefault();
+                let $form = $(event.currentTarget);
+                let request = dataSender.sendData($form);
 
-            let $form = $(event.currentTarget);
-
-            let request = dataSender.sendData($form);
-
-            request.done( (data) => {
-                console.log(data);
-            });
-            request.fail( (jqXHR, textStatus) => {
-                console.log('Something went wrong' + textStatus);
+                request.done( (data) => {
+                    console.log(data);
+                });
+                request.fail( (jqXHR, textStatus) => {
+                    console.log('Something went wrong' + textStatus);
+                });
             });
         });
     });
