@@ -29,20 +29,27 @@ class dbConnection
                                 WHERE TIMESTAMPDIFF(YEAR,a.dob,curdate()) BETWEEN :from_age AND :to_age GROUP BY a.actor_id;",
         "actorsByStudios"   => "SELECT s.name AS 'studios name', CONCAT(a.first_name,' ', a.last_name) AS 'full name',
                                 COUNT(DISTINCT f.film_id) AS 'films quantity' 
-                                FROM studios AS s JOIN films AS f ON f.studio_id=s.studio_id AND s.studio_id=1 
+                                FROM studios AS s JOIN films AS f ON f.studio_id=s.studio_id AND s.studio_id = :studio_id 
                                 JOIN payments AS p ON p.film_id=f.film_id 
                                 JOIN actors AS a ON a.actor_id=p.actor_id GROUP BY a.actor_id;",
-        "namesakes"         => "SELECT CONCAT(a.first_name, ' ', b.last_name) AS 'full name' 
-                                FROM actors AS a INNER JOIN actors AS b ON a.actor_id=b.actor_id 
-                                GROUP BY b.last_name HAVING COUNT(a.last_name)=1;",
-        "actorsByLastYears" => "SELECT s.name AS 'Studios name', COUNT(DISTINCT f.film_id) AS 'Films quantity', 
-                                COUNT(DISTINCT p.payment_id) AS 'Gonorars quantity', SUM(p.gonorar) AS 'Gonorars summary', 
-                                AVG(p.gonorar) AS 'Avarage gonorar' 
-                                FROM studios AS s JOIN films AS f ON f.studio_id=s.studio_id AND f.year >= DATE(NOW())+ INTERVAL -10 YEAR 
+        "namesakes"         => "SELECT CONCAT(a.first_name, ' ', b.last_name) AS 'full_name' 
+                                FROM actors AS a INNER JOIN actors AS b ON a.last_name=b.last_name 
+                                GROUP BY a.first_name, b.last_name HAVING COUNT(a.last_name)=1;",
+        "actorsByLastYears" => "SELECT s.name AS 'studio_name',
+                                CONCAT(a.first_name, ' ', a.last_name) AS 'actor_name', 
+                                COUNT(DISTINCT f.film_id) AS 'films_quantity', 
+                                COUNT(DISTINCT p.payment_id) AS 'fees_quantity', 
+                                SUM(p.gonorar) AS 'fees_summary', 
+                                AVG(p.gonorar) AS 'avarage_fee' 
+                                FROM studios AS s 
+                                JOIN films AS f ON f.studio_id=s.studio_id 
+                                AND f.year >= DATE(NOW())+ INTERVAL -:last_years YEAR 
                                 JOIN payments AS p ON p.film_id=f.film_id 
-                                JOIN actors AS a ON a.actor_id=p.actor_id AND a.actor_id=1 
-                                GROUP BY s.name ORDER BY AVG(p.gonorar) DESC;",
-        "index"             => "SELECT studio_id AS 'studio_id', name AS 'Name' FROM studios;"
+                                JOIN actors AS a ON a.actor_id=p.actor_id
+                                WHERE s.studio_id = :studio_id 
+                                GROUP BY s.name, a.first_name, a.last_name ORDER BY AVG(p.gonorar) DESC;
+",
+        "index"             => "SELECT studio_id AS 'studio_id', name AS 'name' FROM studios;"
     ];
 
     /**

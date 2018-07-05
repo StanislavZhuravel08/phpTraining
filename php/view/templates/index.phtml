@@ -1,14 +1,4 @@
-<?php
-
-function showStudios($studios) {
-    $arrValues = [];
-    foreach ($studios as $row) {
-        $arrValues = array_values($row);
-        echo "<option value='$arrValues[0]'>$arrValues[1]</option>";
-    }
-}
-?>
-
+<?php /** @var \Stas\Controllers\Index $this */ ?>
 <section class="container">
     <h2 class="center">This is a training page. Here you can make some queries to database named dvTraining</h2>
     <ul class="collapsible">
@@ -30,11 +20,11 @@ function showStudios($studios) {
             <p class="collapsible-header">Get info about actors who played roles in films of chosen studio</p>
             <form id="actorsByStudios" class="collapsible-body row" action="/actorsByStudios" method="get">
                 <div class="input-field col s12 m4">
-                    <select name="studioName" class="studio-name" data-validator-rule="validate-int">
+                    <select name="studio_id" class="studio-name" data-validator-rule="validate-int">
                         <option value="" disabled selected>Choose studio</option>
-                        <?php
-                        showStudios($studios);
-                        ?>
+                        <?php foreach ($this->getStudios() as $row) : ?>
+                            <option value="<?= $row['studio_id']; ?>"><?= $row['name']; ?></option>
+                        <?php endforeach; ?>
                     </select>
                     <label>Choose studio</label>
                 </div>
@@ -42,29 +32,28 @@ function showStudios($studios) {
                     <button type="submit" class="waves-effect waves-teal btn-flat teal lighten-2" id="actor-info">Find</button>
                 </p>
             </form>
-
         </li>
         <li>
             <p class="collapsible-header">Get actors who has no namesake</p>
-            <form id="namesakes" class="collapsible-body" action="/namesakes">
+            <form id="namesakes" class="collapsible-body" action="/namesakes" method="get">
                 <button type="submit" class="waves-effect waves-teal btn-flat teal lighten-2" id="actor-namesakes">Find</button>
             </form>
         </li>
         <li>
             <p class="collapsible-header">Count summary of fees for actors who played roles in films chosen studios for last years</p>
-            <form id="actorsByLastYears" class="collapsible-body row" action="/actorsByLastYears">
+            <form id="actorsByLastYears" class="collapsible-body row" action="/actorsByLastYears" method="get">
                 <div class="input-field col s12 m4">
-                    <select name="studioName" class="studio-name" data-validator-rule="validate-int">
+                    <select name="studio_id" class="studio-name" data-validator-rule="validate-int">
                         <option value="" disabled selected>Choose studio</option>
-                        <?php
-                        showStudios($studios);
-                        ?>
+                        <?php foreach ($this->getStudios() as $row) : ?>
+                            <option value="<?= $row['studio_id']; ?>"><?= $row['name']; ?></option>
+                        <?php endforeach; ?>
                     </select>
                     <label>Choose studio</label>
                 </div>
                 <p class="col s12 range-field">
                     <label for="lastAges">Film was made: </label>
-                    <input type="range" name="lastAges" id="lastAges" min="0" max="130">
+                    <input type="range" name="last_years" id="lastAges" min="0" max="130">
                 </p>
                 <p class="col s12">
                     <button type="submit" class="waves-effect waves-teal btn-flat teal lighten-2" id="last-years">Find</button>

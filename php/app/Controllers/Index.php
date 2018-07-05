@@ -8,8 +8,10 @@ use Stas\Models\dbConnection;
 
 class Index extends \Stas\Http\AbstractController
 {
-
-    private $page = "./php/view/front-page.php";
+    /**
+     * @var array
+     */
+    private $studios;
 
     /**
      * @inheritdoc
@@ -26,25 +28,14 @@ class Index extends \Stas\Http\AbstractController
      *
      * @return array
      */
-    private function getRawStudios(): array
+    public function getStudios(): array
     {
-        $queryName = $this->thisShortName($this);
-        $queryName =lcfirst($queryName);
-        $dbConnection = new dbConnection();
-        $msg = $dbConnection->getQueryResult($queryName, '');
-        return $msg;
-    }
+        if ($this->studios === null) {
+            $queryName = $this->thisShortName($this);
+            $dbConnection = new dbConnection();
+            $this->studios = $dbConnection->getQueryResult($queryName, '');
+        }
 
-    /**
-     * @return string
-     */
-    private function renderPage(): string
-    {
-        ob_start();
-        $studios = $this->getRawStudios();
-
-        include($this->page);
-
-        return ob_get_clean();
+        return $this->studios;
     }
 }

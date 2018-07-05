@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: stanislavz
- * Date: 04.07.18
- * Time: 14:10
+ * Date: 05.07.18
+ * Time: 12:28
  */
 
 namespace Stas\Controllers;
@@ -11,9 +11,8 @@ namespace Stas\Controllers;
 use Stas\Http\Response\AbstractResponse;
 use Stas\Http\Response\Json;
 
-class feesByAge extends  \Stas\Http\AbstractController
+class ActorsByLastYears extends \Stas\Http\AbstractController
 {
-
     /**
      * @return AbstractResponse
      */

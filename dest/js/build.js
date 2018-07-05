@@ -20394,8 +20394,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _config = require('./config');
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DataSender = function () {
@@ -20418,36 +20416,6 @@ var DataSender = function () {
                 data: $form.serialize()
             });
         }
-
-        // checkData($form) {
-        //     // check if data can hold invalid values
-        //
-        //     if ($form.id() === 'feesByAge') {
-        //
-        //         // the values are need to check
-        //         let fromAge = form.find('#ageFrom'),
-        //             toAge = form.find('#ageTo'),
-        //             fromAgeVal = form.find('#ageFrom').val(),
-        //             toAgeVal = form.find('#ageTo').val();
-        //
-        //         // validation
-        //         if (fromAgeVal > toAgeVal) {
-        //             let a = toAgeVal,
-        //                 b = fromAgeVal;
-        //
-        //             // setting right values
-        //             fromAge.val(a);
-        //             toAge.val(b);
-        //
-        //             return form;
-        //         }
-        //
-        //         return form;
-        //     }
-        //
-        //     return form;
-        // }
-
     }]);
 
     return DataSender;
@@ -20455,7 +20423,7 @@ var DataSender = function () {
 
 exports.default = DataSender;
 
-},{"./config":3}],2:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -20475,45 +20443,102 @@ var Validator = function () {
             'validate-range': this.validateRange,
             'validate-required': this.validateRequired
         };
+        this.ruleName = '[data-validator-rule]';
+        this.minRange = 'validate-range min';
+        this.maxRange = 'validate-range max';
+        this.self = this;
     }
 
     _createClass(Validator, [{
-        key: 'getFields',
-        value: function getFields($form) {
-            var fieldData = {},
-                rules = [],
-                params = [];
-
-            var fields = $form.querySelectorAll('[data-validator-rule]');
-            console.log(fields);
+        key: 'getFieldsRules',
+        value: function getFieldsRules($form) {
+            var rules = [];
+            $.each(this.getFields($form), function (index, field) {
+                rules[index] = $(field).attr('data-validator-rule').split(' ');
+            });
+            return rules;
         }
 
+        /**
+         *
+         * @param $form
+         * @returns {*}
+         */
+
+    }, {
+        key: 'getFields',
+        value: function getFields($form) {
+            return $form.find('[data-validator-rule]');
+        }
+    }, {
+        key: 'getRangePair',
+        value: function getRangePair($form) {}
         /**
          * @param $form
          */
 
     }, {
         key: 'validate',
-        value: function validate($form) {}
+        value: function validate($form) {
+            var fieldsRules = this.getFieldsRules($form);
+            for (var i = 0; i < fieldsRules.length; i++) {
+                if (this.rules[fieldsRules[i][0]]) {
+                    this.rules[fieldsRules[i][0]]($form);
+                }
+            }
+        }
+    }, {
+        key: 'showErrorMessage',
+        value: function showErrorMessage() {
+            console.log('need to set value');
+        }
 
         /**
-         * @param value
-         * @returns {boolean}
+         *
+         * @param $form
          */
 
     }, {
         key: 'validateInt',
-        value: function validateInt(value) {
-            return Number.isInteger(value);
+        value: function validateInt($form) {
+            var intField = $form.find('[data-validator-rule="validate-int"]');
+            var condition = Number.isInteger(intField.val());
+            console.log(condition);
+            if (condition !== true) {
+                console.log(self);
+            }
         }
 
         /**
-         * @param value
+         *
+         * @param $form
+         * @returns {boolean}
          */
 
     }, {
         key: 'validateRange',
-        value: function validateRange(value) {}
+        value: function validateRange($form) {
+            var rangeId = $form.find("[data-range-id]");
+            var rangeMin = void 0,
+                rangeMax = void 0,
+                a = void 0,
+                b = void 0;
+            $.each(rangeId, function (index, item) {
+                if ($(item).attr('data-validator-rule').includes('min')) {
+                    rangeMin = $(item);
+                }
+                rangeMax = $(item);
+            });
+
+            if (+rangeMin.val() > +rangeMax.val()) {
+                a = +rangeMin.val();
+                b = +rangeMax.val();
+                rangeMin.val(b);
+                rangeMax.val(a);
+            }
+
+            return true;
+        }
 
         /**
          * @param value
@@ -20530,30 +20555,15 @@ var Validator = function () {
 exports.default = Validator;
 
 },{}],3:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-// stores servers url's
-var urls = ['../../php/index.php'];
-var methods = ['POST', 'GET'];
-
-exports.urls = urls;
-exports.methods = methods;
-
-},{}],4:[function(require,module,exports){
 "use strict";
 
-var _DataSender = require("./DataSender.js");
+var _DataSender = require("./classes/DataSender.js");
 
 var _DataSender2 = _interopRequireDefault(_DataSender);
 
-var _Validator = require("./Validator.js");
+var _Validator = require("./classes/Validator.js");
 
 var _Validator2 = _interopRequireDefault(_Validator);
-
-var _config = require("./config.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20570,13 +20580,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
         // find all forms in document
         var forms = $('form');
+
+        // watches submits
         $.each(forms, function (index, form) {
             var $form = $(form);
+
             $form.submit(function (event) {
+
+                var validator = new _Validator2.default();
+
                 event.preventDefault();
                 var $form = $(event.currentTarget);
+                validator.validate($form);
+
+                // send request data with AJAX
                 var request = dataSender.sendData($form);
 
+                // work with response data
                 request.done(function (data) {
                     console.log(data);
                 });
@@ -20592,4 +20612,4 @@ $(document).ready(function () {
     $('select').material_select();
 });
 
-},{"./DataSender.js":1,"./Validator.js":2,"./config.js":3}]},{},[4]);
+},{"./classes/DataSender.js":1,"./classes/Validator.js":2}]},{},[3]);
