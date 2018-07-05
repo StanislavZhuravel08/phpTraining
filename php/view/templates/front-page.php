@@ -1,8 +1,10 @@
 <?php
 
 function showStudios($studios) {
-    foreach ($studios as $id => $name) {
-        echo "<option value='$id'>$name</option>";
+    $arrValues = [];
+    foreach ($studios as $row) {
+        $arrValues = array_values($row);
+        echo "<option value='$arrValues[0]'>$arrValues[1]</option>";
     }
 }
 ?>

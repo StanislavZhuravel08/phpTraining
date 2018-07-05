@@ -35,18 +35,13 @@ class Index extends \Stas\Http\AbstractController
         return $msg;
     }
 
-    private function getStudios()
-    {
-
-    }
-
     /**
      * @return string
      */
     private function renderPage(): string
     {
         ob_start();
-        $studios = $this->getStudios();
+        $studios = $this->getRawStudios();
 
         include($this->page);
 
