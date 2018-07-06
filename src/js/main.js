@@ -22,11 +22,8 @@ import Validator from "./classes/Validator.js";
 
             $form.submit( (event) => {
 
-                let validator = new Validator();
-
                 event.preventDefault();
                 let $form = $(event.currentTarget);
-                validator.validate($form);
 
                 // send request data with AJAX
                 let request = dataSender.sendData($form);
@@ -36,7 +33,8 @@ import Validator from "./classes/Validator.js";
                     console.log(data);
                 });
                 request.fail( (jqXHR, textStatus) => {
-                    console.log('Something went wrong' + textStatus);
+                    console.log(textStatus);
+                    console.log(jqXHR);
                 });
             });
         });

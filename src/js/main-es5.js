@@ -209,11 +209,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
             $form.submit(function (event) {
 
-                var validator = new _Validator2.default();
-
                 event.preventDefault();
                 var $form = $(event.currentTarget);
-                validator.validate($form);
 
                 // send request data with AJAX
                 var request = dataSender.sendData($form);
@@ -223,7 +220,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     console.log(data);
                 });
                 request.fail(function (jqXHR, textStatus) {
-                    console.log('Something went wrong' + textStatus);
+                    console.log(textStatus);
+                    console.log(jqXHR);
                 });
             });
         });

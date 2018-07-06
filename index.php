@@ -10,6 +10,7 @@ require_once 'php/boostrap.php';
 
 use Stas\Http\Router;
 
+$uri = $_SERVER['REQUEST_URI'];
+
 $router = new Router();
 $router->dispatch();
-
