@@ -10108,3 +10108,14 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   stroke-linecap: round;
   /*shape-rendering: crispEdges;*/
 }
+
+/* line 5, ../scss/main.scss */
+#toast-container {
+  top: 30%;
+  left: 30%;
+  width: 200px;
+}
+/* line 9, ../scss/main.scss */
+#toast-container div {
+  color: #000;
+}

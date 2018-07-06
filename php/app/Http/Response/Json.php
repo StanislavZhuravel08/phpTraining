@@ -5,27 +5,17 @@ namespace Stas\Http\Response;
 class Json extends AbstractResponse
 {
     /**
-     * @var array|string $body
-     */
-    private $body;
-
-    /**
      * @inheritdoc
      */
-    public function sendResponse()
-    {
-        header('Content-Type: javascript');
-        headers_sent();
-        echo $this->body;
-    }
+    protected $headers = [
+        'Content-Type: application/json'
+    ];
 
     /**
-     * @param $body
-     * @return AbstractResponse
+     * @return string
      */
-    public function setBody($body): AbstractResponse
+    public function getBody(): string
     {
-        $this->body = json_encode($body);
-        return $this;
+        return is_array($this->body) ? json_encode($this->body) : $this->body;
     }
 }

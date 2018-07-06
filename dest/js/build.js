@@ -20449,6 +20449,13 @@ var Validator = function () {
         this.self = this;
     }
 
+    /**
+     *
+     * @param $form
+     * @returns {Array}
+     */
+
+
     _createClass(Validator, [{
         key: 'getFieldsRules',
         value: function getFieldsRules($form) {
@@ -20483,14 +20490,18 @@ var Validator = function () {
             var fieldsRules = this.getFieldsRules($form);
             for (var i = 0; i < fieldsRules.length; i++) {
                 if (this.rules[fieldsRules[i][0]]) {
-                    this.rules[fieldsRules[i][0]]($form);
+                    var condition = this.rules[fieldsRules[i][0]]($form);
+                    console.log(+'this');
+                    if (!condition) {
+                        this.showErrorMessage();
+                    }
                 }
             }
         }
     }, {
         key: 'showErrorMessage',
         value: function showErrorMessage() {
-            console.log('need to set value');
+            Materialize.toast('Need to set value', 3000, 'red accent-2');
         }
 
         /**
@@ -20502,10 +20513,8 @@ var Validator = function () {
         key: 'validateInt',
         value: function validateInt($form) {
             var intField = $form.find('[data-validator-rule="validate-int"]');
-            var condition = Number.isInteger(intField.val());
-            console.log(condition);
-            if (condition !== true) {
-                console.log(self);
+            if (intField.val() === null) {
+                return false;
             }
         }
 

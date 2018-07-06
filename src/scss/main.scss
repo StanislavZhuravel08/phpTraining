@@ -2,3 +2,12 @@
 
 @import "parts/home";
 
+#toast-container {
+  top: 30%;
+  left: 30%;
+  width: 200px;
+  div {
+    color: #000;
+  }
+}
+

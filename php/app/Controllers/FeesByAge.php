@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: stanislavz
- * Date: 04.07.18
- * Time: 14:10
- */
 
 namespace Stas\Controllers;
 

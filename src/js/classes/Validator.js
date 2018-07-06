@@ -12,6 +12,11 @@ export default class Validator {
         this.self = this;
     }
 
+    /**
+     *
+     * @param $form
+     * @returns {Array}
+     */
     getFieldsRules($form) {
         let rules = [];
         $.each(this.getFields($form), (index, field) => {
@@ -39,13 +44,17 @@ export default class Validator {
         let fieldsRules = this.getFieldsRules($form);
         for (let i =0; i < fieldsRules.length; i++) {
             if (this.rules[fieldsRules[i][0]]) {
-                this.rules[fieldsRules[i][0]]($form);
+                let condition = this.rules[fieldsRules[i][0]]($form);
+                console.log(+'this');
+                if (!condition) {
+                    this.showErrorMessage();
+                }
             }
         }
     }
 
     showErrorMessage() {
-        console.log('need to set value');
+        Materialize.toast('Need to set value', 3000, 'red accent-2');
     }
 
     /**
@@ -54,11 +63,10 @@ export default class Validator {
      */
     validateInt($form) {
         let intField = $form.find('[data-validator-rule="validate-int"]');
-        let condition = Number.isInteger(intField.val());
-        console.log( condition );
-        if ( condition !== true ) {
-
+        if (intField.val() === null) {
+            return false;
         }
+
     }
 
     /**
